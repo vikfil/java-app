@@ -11,6 +11,7 @@ public class Subject {
     public Subject() {}
 
     public void setSubjectName(String subjectName) {
+
         this.subjectName = subjectName;
     }
 

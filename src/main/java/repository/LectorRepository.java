@@ -12,12 +12,10 @@ public class LectorRepository {
     private final static String INSERT_LECTOR = "INSERT INTO Lector(firstName, lastName) VALUES(?,?)";
     private final static String SELECT_ALL = "SELECT * FROM Lector";
     private final static String DELETE = "DELETE FROM Lector WHERE id = ?";
-   // private Connection connection;
     private JDBCSingleton jdbc;
 
     public LectorRepository() throws SQLException {
         jdbc = JDBCSingleton.getInstance();
-       // connection = jdbc.getConnection();
     }
 
 
@@ -34,7 +32,7 @@ public class LectorRepository {
         return flag;
     }
 
-    public List<Lector> selectAllLector() {
+    public List<Lector> selectAllLectors() {
         List<Lector> list = new ArrayList<>();
              try(Connection connection = jdbc.getConnection();
                  PreparedStatement prep = connection.prepareStatement(SELECT_ALL)) {
@@ -61,8 +59,5 @@ public class LectorRepository {
         }catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

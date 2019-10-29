@@ -1,14 +1,11 @@
 package repository;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import model.*;
 import org.junit.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
 
 public class ScheduleTest {
 
@@ -52,10 +49,8 @@ public class ScheduleTest {
          Assert.assertEquals(false, schedule.addNewLesson(lesson4));
          Assert.assertEquals(true, schedule.addNewLesson(lesson5));
          Assert.assertEquals(false, schedule.addNewLesson(lesson6));
-        // Assert.assertEquals(true, schedule.addNewLesson(lesson7));
-
+         Assert.assertEquals(true, schedule.addNewLesson(lesson7));
     }
-
 
     @Test
     public void getScheduleForGroup() {

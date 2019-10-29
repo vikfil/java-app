@@ -3,34 +3,26 @@ package jsonTest;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.google.gson.JsonObject;
-import model.Group;
-import model.Lector;
 import model.Lesson;
-import repository.LessonRepository;
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class ScheduleToJson {
-   private  final String jsonFile;
+public class ScheduleToJson implements Runnable {
+   private  String jsonFile;
+   private List<Lesson> list;
 
-    public ScheduleToJson(String file) {
+    public ScheduleToJson(String file, List<Lesson> list) {
         jsonFile = file;
+        this.list = list;
     }
 
-    public void addLessonToFile(List<Lesson> lesson) {
+    @Override
+    public void run() {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            mapper.writeValue(new File(jsonFile), lesson);
-
+            mapper.writeValue(new File(jsonFile), list);
         } catch (JsonParseException e) {
             e.printStackTrace();
         } catch (JsonMappingException e) {
@@ -39,7 +31,6 @@ public class ScheduleToJson {
             e.printStackTrace();
         }
     }
-
 
     public List<Lesson> getAllLessonsFromFile() {
         List<Lesson> list = new ArrayList<>();
@@ -52,5 +43,4 @@ public class ScheduleToJson {
         catch (IOException e) {e.printStackTrace();}
         return list;
     }
-
 }

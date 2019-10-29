@@ -1,26 +1,27 @@
 package jsonTest;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import model.*;
-
-
-import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class JsonTester {
 
+public class JsonTester {
     public static void main(String[] args) {
-        ScheduleToJson scheduleToJson = new ScheduleToJson("JsonFile.json");
-        List<Lesson> listLessons = lessonGenerator(125);
-        scheduleToJson.addLessonToFile(listLessons);
+       List<Lesson> listLessons = lessonGenerator(125);
+       ScheduleToJson scheduleToJson = new ScheduleToJson("JsonFile.json", listLessons);
+
+        try {
+            Thread thread = new Thread(scheduleToJson);
+            thread.start();
+            thread.join();
+        }catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         List<Lesson> lessonFromJson =scheduleToJson.getAllLessonsFromFile();
         System.out.println(lessonFromJson);
     }
-
 
    private  static List<Lesson> lessonGenerator(int quantityLesson) {
         Lesson lesson = new Lesson();

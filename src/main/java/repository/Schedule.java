@@ -3,7 +3,6 @@ package repository;
 import model.Group;
 import model.Lector;
 import model.Lesson;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -24,8 +23,10 @@ private   List<Lesson> lessons;
             if (les.equals(lesson)) {
                 return false;
             }
-            return compareDayAndLessonNumber(les, lesson ) ? compareLectorAndSubjectAndClassroom(les, lesson)
-                                                           ? lessons.add(lesson) : false : lessons.add(lesson);
+            return compareDayAndLessonNumber(les, lesson ) ? tripleEqualityBetweenLectorSubjectAndClassroom(les, lesson)
+                                                           ? lessons.add(lesson) : tripleInequalityBetweenLectorSubjectAndClassroom(les, lesson)
+                                                           ? lessons.add(lesson): false
+                                                           : lessons.add(lesson);
         }
         return false;
     }
@@ -37,6 +38,9 @@ private   List<Lesson> lessons;
 
     @Override
     public List<Lesson> getScheduleForGroup(Group group) {
+        if (group == null) {
+            throw new IllegalArgumentException();
+        }
         return lessons.stream()
                       .filter(Lesson -> Lesson.getGroup().equals(group))
                       .collect(Collectors.toList());
@@ -44,6 +48,9 @@ private   List<Lesson> lessons;
 
     @Override
     public List<Lesson> getScheduleForLector(Lector lector) {
+        if (lector == null) {
+            throw new IllegalArgumentException();
+        }
         return lessons.stream()
                       .filter(Lesson -> Lesson.getLector().equals(lector))
                       .collect(Collectors.toList());
@@ -53,7 +60,12 @@ private   List<Lesson> lessons;
         return (lesson1.getWeekday().equals(lesson2.getWeekday())) && (lesson1.getNumberLesson() == lesson2.getNumberLesson());
     }
 
-    private boolean compareLectorAndSubjectAndClassroom(Lesson lesson1, Lesson lesson2) {
+    private boolean tripleInequalityBetweenLectorSubjectAndClassroom(Lesson lesson1, Lesson lesson2) {
+        return !(lesson1.getLector().equals(lesson2.getLector())) && !(lesson1.getClassroom().equals(lesson2.getClassroom()))
+                && !(lesson1.getSubject().equals(lesson2.getSubject()));
+    }
+
+    private boolean tripleEqualityBetweenLectorSubjectAndClassroom(Lesson lesson1, Lesson lesson2) {
         return (lesson1.getLector().equals(lesson2.getLector())) && (lesson1.getClassroom().equals(lesson2.getClassroom()))
                    && (lesson1.getSubject().equals(lesson2.getSubject()));
     }

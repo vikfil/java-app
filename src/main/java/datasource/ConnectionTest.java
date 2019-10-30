@@ -19,6 +19,7 @@ public class ConnectionTest {
             lectorRepository.addLector(lector);
             lectorRepository.deleteLectorById(1);
             lectorRepository.selectAllLectors();
+            lectorRepository.updateLectorById(new Lector("Petro", "Ivanovich"), 3);
 
             System.out.println(lectorRepository.selectAllLectors());
         } catch (SQLException e) {

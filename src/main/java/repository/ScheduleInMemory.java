@@ -6,15 +6,18 @@ import model.Lesson;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Schedule implements LessonRepository {
+public class ScheduleInMemory implements LessonRepository {
 private   List<Lesson> lessons;
 
-    public Schedule(List<Lesson> lessons) {
+    public ScheduleInMemory(List<Lesson> lessons) {
         this.lessons = lessons;
     }
 
     @Override
     public boolean addNewLesson(Lesson lesson) {
+        if (lesson == null) {
+            return false;
+        }
         if (lessons.size() == 0) {
             lessons.add(lesson);
             return true;
@@ -86,7 +89,7 @@ private   List<Lesson> lessons;
         if (getClass() != otherObject.getClass()) {
             return false;
         }
-        Schedule other = (Schedule) otherObject;
+        ScheduleInMemory other = (ScheduleInMemory) otherObject;
         return Objects.equals(lessons, other.lessons);
     }
 

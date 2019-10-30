@@ -12,6 +12,7 @@ public class LectorRepository {
     private final static String INSERT_LECTOR = "INSERT INTO Lector(firstName, lastName) VALUES(?,?)";
     private final static String SELECT_ALL = "SELECT * FROM Lector";
     private final static String DELETE = "DELETE FROM Lector WHERE id = ?";
+    private final static String UPDATE = "UPDATE lector SET firstName = ?, lastName = ? WHERE id  = ?";
     private JDBCSingleton jdbc;
 
     public LectorRepository() throws SQLException {
@@ -48,6 +49,20 @@ public class LectorRepository {
                 e.printStackTrace();
              }
         return list;
+    }
+
+    public void updateLectorById(Lector lector, int id) {
+        try(Connection connection = jdbc.getConnection();
+            PreparedStatement prep = connection.prepareStatement(UPDATE)) {
+
+            prep.setString(1, lector.getFirstName());
+            prep.setString(2, lector.getLastName());
+            prep.setInt(3, 2);
+            prep.executeUpdate();
+
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void deleteLectorById(int id) {

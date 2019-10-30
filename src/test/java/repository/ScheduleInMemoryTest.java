@@ -2,12 +2,16 @@ package repository;
 
 import model.*;
 import org.junit.*;
+import org.junit.rules.ExpectedException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 
-public class ScheduleTest {
+public class ScheduleInMemoryTest {
+    Group groupNull;
+    Lector lectorNull;
 
     private Lesson lesson;
     private Lesson lesson1;
@@ -32,28 +36,29 @@ public class ScheduleTest {
         lesson7 = new Lesson(Week.MONDAY, 1, new Subject("Algebra"), new Group(3, "three",new ArrayList<>(Arrays.asList("ivan","petro", "sergiy"))), new Lector("Ivan", "Viktorovich"), new Classroom("1"));
     }
 
-    @After
-    public void tearDown() throws Exception {
-
-    }
-
     @Test
     public void addLesson() {
          List<Lesson> lessonsList = new ArrayList<>();
-         Schedule schedule = new Schedule(lessonsList);
-         Assert.assertEquals(true, schedule.addNewLesson(lesson));
-         Assert.assertEquals(false, schedule.addNewLesson(lesson));
-         Assert.assertEquals(true, schedule.addNewLesson(lesson1));
-         Assert.assertEquals(false, schedule.addNewLesson(lesson2));
-         Assert.assertEquals(false, schedule.addNewLesson(lesson3));
-         Assert.assertEquals(false, schedule.addNewLesson(lesson4));
-         Assert.assertEquals(true, schedule.addNewLesson(lesson5));
-         Assert.assertEquals(false, schedule.addNewLesson(lesson6));
-         Assert.assertEquals(true, schedule.addNewLesson(lesson7));
+         ScheduleInMemory scheduleInMemory = new ScheduleInMemory(lessonsList);
+         Assert.assertEquals(true, scheduleInMemory.addNewLesson(lesson));
+         Assert.assertEquals(false, scheduleInMemory.addNewLesson(lesson));
+         Assert.assertEquals(true, scheduleInMemory.addNewLesson(lesson1));
+         Assert.assertEquals(false, scheduleInMemory.addNewLesson(lesson2));
+         Assert.assertEquals(false, scheduleInMemory.addNewLesson(lesson3));
+         Assert.assertEquals(false, scheduleInMemory.addNewLesson(lesson4));
+         Assert.assertEquals(true, scheduleInMemory.addNewLesson(lesson5));
+         Assert.assertEquals(false, scheduleInMemory.addNewLesson(lesson6));
+         Assert.assertEquals(true, scheduleInMemory.addNewLesson(lesson7));
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void getScheduleForNullGroup() {
+        ScheduleInMemory scheduleInMemory = scheduleWithLesson();
+        scheduleInMemory.getScheduleForGroup(groupNull);
     }
 
     @Test
     public void getScheduleForGroup() {
+
         Group one = new Group(1, "one",new ArrayList<>(Arrays.asList("ivan","petro")));
         Group two = new Group(2, "two",new ArrayList<>(Arrays.asList("ivan","petro")));
         Group three = new Group(3, "three",new ArrayList<>(Arrays.asList("ivan","petro")));
@@ -66,14 +71,20 @@ public class ScheduleTest {
 
         List<Lesson> listTwo = new ArrayList<>();
         listTwo.add(new Lesson(Week.MONDAY, 1, new Subject("Math"), new Group(2, "two",new ArrayList<>(Arrays.asList("ivan","petro"))), new Lector("Ivan", "Dmytrovich"), new Classroom("3")));
-        Schedule schedule = scheduleWithLesson();
+        ScheduleInMemory scheduleInMemory = scheduleWithLesson();
 
-        Assert.assertEquals(listOne, schedule.getScheduleForGroup(one));
-        Assert.assertNotEquals(listOneWrong, schedule.getScheduleForGroup(one));
-        Assert.assertEquals(listTwo, schedule.getScheduleForGroup(two));
-        Assert.assertNotEquals(listOne, schedule.getScheduleForGroup(three));
-        Assert.assertEquals((new ArrayList<>()), schedule.getScheduleForGroup(three));
+        Assert.assertEquals(listOne, scheduleInMemory.getScheduleForGroup(one));
+        Assert.assertNotEquals(listOneWrong, scheduleInMemory.getScheduleForGroup(one));
+        Assert.assertEquals(listTwo, scheduleInMemory.getScheduleForGroup(two));
+        Assert.assertNotEquals(listOne, scheduleInMemory.getScheduleForGroup(three));
+        Assert.assertEquals((new ArrayList<>()), scheduleInMemory.getScheduleForGroup(three));
 
+
+    }
+    @Test(expected = IllegalArgumentException.class)
+    public void getScheduleForNullLector() {
+        ScheduleInMemory scheduleInMemory = scheduleWithLesson();
+        scheduleInMemory.getScheduleForLector(lectorNull);
     }
 
     @Test
@@ -91,11 +102,12 @@ public class ScheduleTest {
         List<Lesson> listLectorTwo = new ArrayList<>();
         listLectorTwo.add(new Lesson(Week.MONDAY, 1, new Subject("Math"), new Group(2, "two",new ArrayList<>(Arrays.asList("ivan","petro"))), new Lector("Ivan", "Dmytrovich"), new Classroom("3")));
 
-        Schedule schedule = scheduleWithLesson();
+        ScheduleInMemory scheduleInMemory = scheduleWithLesson();
 
-       Assert.assertEquals(listLectorOne, schedule.getScheduleForLector(lector1));
-       Assert.assertNotEquals(listLectorOneWrong, schedule.getScheduleForLector(lector1));
-       Assert.assertEquals(listLectorTwo, schedule.getScheduleForLector(lector2));
+       Assert.assertEquals(listLectorOne, scheduleInMemory.getScheduleForLector(lector1));
+       Assert.assertNotEquals(listLectorOneWrong, scheduleInMemory.getScheduleForLector(lector1));
+       Assert.assertEquals(listLectorTwo, scheduleInMemory.getScheduleForLector(lector2));
+
 
     }
     @Test
@@ -109,14 +121,14 @@ public class ScheduleTest {
         List<Lesson> wrongList = new ArrayList<>();
         wrongList.add(new Lesson(Week.MONDAY, 1, new Subject("History"), new Group(1, "one",new ArrayList<>(Arrays.asList("ivan","petro"))), new Lector("Igor", "Mykolayovich"), new Classroom("13")));
 
-        Schedule schedule = scheduleWithLesson();
+        ScheduleInMemory scheduleInMemory = scheduleWithLesson();
 
-        Assert.assertEquals(expectedList, schedule.getAllLessons());
-        Assert.assertNotEquals(wrongList, schedule.getAllLessons());
+        Assert.assertEquals(expectedList, scheduleInMemory.getAllLessons());
+        Assert.assertNotEquals(wrongList, scheduleInMemory.getAllLessons());
 
     }
 
-    private Schedule scheduleWithLesson() {
+    private ScheduleInMemory scheduleWithLesson() {
          List<Lesson> lessonsList = new ArrayList<>();
          lesson = new Lesson(Week.MONDAY, 1, new Subject("History"), new Group(1, "one",new ArrayList<>(Arrays.asList("ivan","petro"))), new Lector("Igor", "Mykolayovich"), new Classroom("13"));
          lesson1 = new Lesson(Week.MONDAY, 2, new Subject("History"), new Group(1, "one",new ArrayList<>(Arrays.asList("ivan","petro"))), new Lector("Igor", "Mykolayovich"), new Classroom("13"));
@@ -126,7 +138,7 @@ public class ScheduleTest {
          lessonsList.add(lesson1);
          lessonsList.add(lesson2);
          lessonsList.add(lesson3);
-         Schedule schedule = new Schedule(lessonsList);
-         return schedule;
+         ScheduleInMemory scheduleInMemory = new ScheduleInMemory(lessonsList);
+         return scheduleInMemory;
     }
 }

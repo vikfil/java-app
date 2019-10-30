@@ -72,31 +72,4 @@ private   List<Lesson> lessons;
         return (lesson1.getLector().equals(lesson2.getLector())) && (lesson1.getClassroom().equals(lesson2.getClassroom()))
                    && (lesson1.getSubject().equals(lesson2.getSubject()));
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(lessons);
-    }
-
-    @Override
-    public boolean equals(Object otherObject) {
-        if(this == otherObject) {
-            return true;
-        }
-        if (otherObject == null) {
-            return false;
-        }
-        if (getClass() != otherObject.getClass()) {
-            return false;
-        }
-        ScheduleInMemory other = (ScheduleInMemory) otherObject;
-        return Objects.equals(lessons, other.lessons);
-    }
-
-    @Override
-    public String toString() {
-        return "ScheduleDao{" +
-                "lessons=" + lessons +
-                '}';
-    }
 }

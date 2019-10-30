@@ -13,6 +13,7 @@ public class LectorRepository {
     private final static String SELECT_ALL = "SELECT * FROM Lector";
     private final static String DELETE = "DELETE FROM Lector WHERE id = ?";
     private final static String UPDATE = "UPDATE lector SET firstName = ?, lastName = ? WHERE id  = ?";
+    private final static String DROP_TABLE = "DROP TABLE Lector";
     private JDBCSingleton jdbc;
 
     public LectorRepository() throws SQLException {
@@ -71,6 +72,14 @@ public class LectorRepository {
             prep.setInt(1, id);
             prep.executeUpdate();
 
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void deleteLectorTable() {
+        try(Connection connection = jdbc.getConnection();
+            Statement statement = connection.createStatement()) {
+            statement.executeUpdate(DROP_TABLE);
         }catch (SQLException e) {
             e.printStackTrace();
         }
